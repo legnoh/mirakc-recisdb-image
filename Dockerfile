@@ -1,7 +1,11 @@
-FROM mirakc/mirakc:3.4.58-debian
+ARG MIRAKC_VERSION=3.4.58
 
-ENV RECISDB_VERSION=1.2.3
+FROM mirakc/mirakc:${MIRAKC_VERSION}-debian
 
-RUN curl -LO https://github.com/kazuki0824/recisdb-rs/releases/download/${RECISDB_VERSION}/recisdb_${RECISDB_VERSION}-1_amd64.deb \
-  && apt -y install ./recisdb_${RECISDB_VERSION}-1_amd64.deb \
-  && rm ./recisdb_${RECISDB_VERSION}_amd64.deb
+ARG RECISDB_VERSION=1.2.3
+
+RUN apt-get update && apt-get upgrade -y && \
+  ARCH=$(dpkg --print-architecture) && \
+  curl -LO https://github.com/kazuki0824/recisdb-rs/releases/download/${RECISDB_VERSION}/recisdb_${RECISDB_VERSION}-1_${ARCH}.deb \
+  && apt -y install ./recisdb_${RECISDB_VERSION}-1_${ARCH}.deb \
+  && rm ./recisdb_${RECISDB_VERSION}-1_${ARCH}.deb
